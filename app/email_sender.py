@@ -34,3 +34,61 @@ class CircuitBreaker:
         
         if self.failure_count >= self.failure_threshold:
             self.state = "OPEN"
+
+class EmailSender:
+    def __init__(self, smtp_server: str, smtp_port: int, username: str, password: str):
+        self.smtp_server = smtp_server
+        self.smtp_port = smtp_port
+        self.username = username
+        self.password = password
+        self.circuit_breaker = CircuitBreaker()
+    
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+        retry=retry_if_exception_type((smtplib.SMTPException, ConnectionError))
+    )
+    def send_email(self, recipient: str, subject: str, body: str, is_html: bool = True) -> bool:
+        """Send email with retry logic and circuit breaker"""
+        
+        if not self.circuit_breaker.can_execute():
+            logger.warning("Circuit breaker is OPEN, email not sent")
+            return False
+        
+        try:
+            # Create message
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = subject
+            msg['From'] = self.username
+            msg['To'] = recipient
+            
+            # Create body
+            if is_html:
+                part = MIMEText(body, 'html')
+            else:
+                part = MIMEText(body, 'plain')
+            msg.attach(part)
+            
+            # Send email
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.username, self.password)
+                server.send_message(msg)
+
+            self.circuit_breaker.record_success()
+            logger.info(f"Email sent successfully to {recipient}")
+            return True
+            
+        except Exception as e:
+            self.circuit_breaker.record_failure()
+            logger.error(f"Failed to send email to {recipient}: {e}")
+            raise
+    
+    def get_status(self) -> dict:
+        """Get email sender status including circuit breaker state"""
+        return {
+            "circuit_breaker_state": self.circuit_breaker.state,
+            "failure_count": self.circuit_breaker.failure_count,
+            "smtp_server": self.smtp_server,
+            "smtp_port": self.smtp_port
+        }
