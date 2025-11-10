@@ -164,3 +164,50 @@ async def send_email(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal server error"
         )
+
+@app.post("/queue-email", response_model=EmailResponse)
+async def queue_email(
+    email_request: EmailRequest,
+    db: Session = Depends(get_db)
+):
+    """Queue email for async processing"""
+    try:
+        correlation_id = email_request.correlation_id or str(uuid.uuid4())
+        
+        # Create queue entry
+        queue_item = EmailQueue(
+            template_name=email_request.template_name,
+            recipient_email=email_request.recipient_email,
+            variables=email_request.variables,
+            priority=email_request.priority,
+            correlation_id=correlation_id,
+            status="pending"
+        )
+        
+        db.add(queue_item)
+        db.commit()
+        
+        # Publish to RabbitMQ
+        message = {
+            "queue_item_id": queue_item.id,
+            "template_name": email_request.template_name,
+            "recipient_email": email_request.recipient_email,
+            "variables": email_request.variables,
+            "correlation_id": correlation_id,
+            "priority": email_request.priority
+        }
+        
+        await rabbitmq_manager.publish_email_message(message)
+        
+        return EmailResponse(
+            success=True,
+            message="Email queued for processing",
+            correlation_id=correlation_id
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to queue email: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to queue email"
+        )
