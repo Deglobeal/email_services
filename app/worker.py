@@ -122,3 +122,20 @@ class EmailWorker:
         """Stop processing messages"""
         self.processing = False
         logger.info("Stopping email worker")
+
+email_worker = EmailWorker()
+
+# For running worker separately
+async def main():
+    worker = EmailWorker()
+    await worker.start_processing()
+    
+    try:
+        # Keep running
+        while True:
+            await asyncio.sleep(1)
+    except KeyboardInterrupt:
+        await worker.stop_processing()
+
+if __name__ == "__main__":
+    asyncio.run(main())
