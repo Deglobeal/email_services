@@ -211,3 +211,33 @@ async def queue_email(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to queue email"
         )
+
+@app.get("/status/{correlation_id}")
+def get_email_status(correlation_id: str, db: Session = Depends(get_db)):
+    """Get email delivery status"""
+    queue_item = db.query(EmailQueue).filter(
+        EmailQueue.correlation_id == correlation_id
+    ).first()
+    
+    if not queue_item:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Email not found"
+        )
+    
+    return {
+        "success": True,
+        "data": {
+            "status": queue_item.status,
+            "recipient": queue_item.recipient_email,
+            "template": queue_item.template_name,
+            "processed_at": queue_item.processed_at,
+            "error_message": queue_item.error_message,
+            "retry_count": queue_item.retry_count
+        },
+        "message": f"Email status: {queue_item.status}"
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
