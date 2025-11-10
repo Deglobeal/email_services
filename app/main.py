@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks, status
 from sqlalchemy.orm import Session
-from typing import Dict, Any
+from sqlalchemy import text
+from typing import Dict, Any, cast
 import uuid
 import logging
+from datetime import datetime
 from .database import get_db
 from .models import EmailTemplate, EmailQueue
 from .schemas import (
@@ -28,13 +30,13 @@ email_sender = EmailSender(
 
 @app.get("/health", response_model=HealthCheck)
 async def health_check(db: Session = Depends(get_db)):
-    """Health check endpoint"""
     # Check database
     db_healthy = False
     try:
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         db_healthy = True
     except Exception as e:
+        logger.error(f"Database health check failed: {e}")
         logger.error(f"Database health check failed: {e}")
     
     # Check Redis (simplified - you'd use redis client in real implementation)
@@ -126,8 +128,8 @@ async def send_email(
         
         # Render template
         rendered_subject, rendered_body = template_engine.render_email(
-            template.subject,
-            template.body_template,
+            cast(str, template.subject),
+            cast(str, template.body_template),
             email_request.variables
         )
         
