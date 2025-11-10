@@ -84,3 +84,83 @@ def create_template(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal server error"
         )
+    
+@app.get("/templates/{template_name}", response_model=EmailTemplateResponse)
+def get_template(template_name: str, db: Session = Depends(get_db)):
+    """Get template by name"""
+    template = db.query(EmailTemplate).filter(
+        EmailTemplate.name == template_name,
+        EmailTemplate.is_active == True
+    ).first()
+    
+    if not template:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Template not found"
+        )
+    
+    return template
+
+@app.post("/send-email", response_model=EmailResponse)
+async def send_email(
+    email_request: EmailRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+    """Send email immediately or queue for processing"""
+    try:
+        # Generate correlation ID if not provided
+        correlation_id = email_request.correlation_id or str(uuid.uuid4())
+        
+        # Get template
+        template = db.query(EmailTemplate).filter(
+            EmailTemplate.name == email_request.template_name,
+            EmailTemplate.is_active == True
+        ).first()
+        
+        if not template:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Template '{email_request.template_name}' not found"
+            )
+        
+        # Render template
+        rendered_subject, rendered_body = template_engine.render_email(
+            template.subject,
+            template.body_template,
+            email_request.variables
+        )
+        
+        # Send email
+        success = email_sender.send_email(
+            recipient=email_request.recipient_email,
+            subject=rendered_subject,
+            body=rendered_body
+        )
+        
+        if success:
+            return EmailResponse(
+                success=True,
+                message="Email sent successfully",
+                correlation_id=correlation_id,
+                data={"recipient": email_request.recipient_email}
+            )
+        else:
+            return EmailResponse(
+                success=False,
+                message="Failed to send email",
+                correlation_id=correlation_id,
+                error="Email service unavailable"
+            )
+            
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Email sending failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
