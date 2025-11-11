@@ -1,16 +1,17 @@
-# app/worker.py
 import asyncio
 import json
 import logging
+import time
 from sqlalchemy.orm import Session
 from aio_pika import IncomingMessage
 from datetime import datetime
 
-from .database import SessionLocal
-from .models import EmailQueue
-from .email_sender import EmailSender
-from .rabbitmq import rabbitmq_manager
-from .config import settings
+# Import database correctly
+from app.database import SessionLocal
+from app.models import EmailQueue
+from app.email_sender import EmailSender
+from app.rabbitmq import rabbitmq_manager
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ class EmailWorker:
                 try:
                     queue_item = db.query(EmailQueue).filter(
                         EmailQueue.id == message_data['queue_item_id']
-                    ).with_for_update().first()
+                    ).first()
                     
                     if not queue_item:
                         logger.error(f"Queue item not found: {message_data['queue_item_id']}")
@@ -46,20 +47,20 @@ class EmailWorker:
                         return
                     
                     # Mark as processing
-                    queue_item.status = "processing"
+                    queue_item.status = "processing"   # type: ignore
                     db.commit()
                     
                     # Send email
                     success = self.email_sender.send_email(
-                        recipient=queue_item.recipient_email,
-                        subject=queue_item.subject,
-                        body=queue_item.body,
-                        body_type=queue_item.body_type
+                        recipient=queue_item.recipient_email,   # type: ignore
+                        subject=queue_item.subject,   # type: ignore
+                        body=queue_item.body,   # type: ignore
+                        body_type=queue_item.body_type   # type: ignore
                     )
                     
                     if success:
-                        queue_item.status = "sent"
-                        queue_item.processed_at = datetime.now()
+                        queue_item.status = "sent"   # type: ignore
+                        queue_item.processed_at = datetime.now()   # type: ignore
                         logger.info(f"Email sent successfully: {correlation_id}")
                     else:
                         raise Exception("Email sending failed - circuit breaker open")
@@ -71,28 +72,31 @@ class EmailWorker:
                     logger.error(f"Failed to process email {correlation_id}: {e}")
                     
                     # Handle retries
-                    current_retry_count = message.headers.get('x-retry-count', 0)
+                    current_retry_count = message.headers.get('x-retry-count', 0) if message.headers else 0
                     
-                    if current_retry_count >= self.max_retries:
-                        # Permanent failure - move to failed queue
-                        queue_item.status = "failed"
-                        queue_item.error_message = str(e)
-                        queue_item.processed_at = datetime.now()
+                    if current_retry_count >= self.max_retries:   # type: ignore
+                        # Permanent failure - update status
+                        queue_item.status = "failed"   # type: ignore
+                        queue_item.error_message = str(e)   # type: ignore
+                        queue_item.processed_at = datetime.now()   # type: ignore
                         db.commit()
                         
                         await rabbitmq_manager.move_to_failed_queue(message, str(e))
                         logger.error(f"Email permanently failed after {current_retry_count} retries: {correlation_id}")
                     else:
                         # Requeue with incremented retry count
-                        queue_item.status = "pending"
-                        queue_item.retry_count = current_retry_count + 1
-                        queue_item.error_message = str(e)
+                        queue_item.status = "pending"   # type: ignore
+                        queue_item.retry_count = current_retry_count + 1   # type: ignore
+                        queue_item.error_message = str(e)   # type: ignore
                         db.commit()
                         
                         # Requeue with delay
-                        await self.requeue_message(message_data, current_retry_count + 1)
+                        await self.requeue_message(message_data, current_retry_count + 1)   # type: ignore
                         await message.ack()
-                        logger.warning(f"Email requeued for retry {current_retry_count + 1}: {correlation_id}")
+                        logger.warning(f"Email requeued for retry {current_retry_count + 1}: {correlation_id}")   # type: ignore
+                    
+                finally:
+                    db.close()
                     
             except Exception as e:
                 logger.error(f"Message processing error: {e}")
