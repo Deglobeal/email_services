@@ -4,12 +4,13 @@ import uuid
 import logging
 from datetime import datetime
 
-from .database import get_db, engine, Base
-from .models import EmailQueue
-from .schemas import EmailRequest, EmailResponse, HealthCheck
-from .email_sender import EmailSender
-from .rabbitmq import rabbitmq_manager
-from .config import settings
+# Import database components correctly
+from app.database import get_db, engine, Base, SessionLocal
+from app.models import EmailQueue
+from app.schemas import EmailRequest, EmailResponse, HealthCheck
+from app.email_sender import EmailSender
+from app.rabbitmq import rabbitmq_manager
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
