@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, JSON, ForeignKey
+# app/models.py
+from sqlalchemy import Column, Integer, String, DateTime, Text, JSON, Enum
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy import Enum
-from sqlalchemy.orm import relationship
-from .db import Base
+from sqlalchemy.orm import declarative_base
 import enum
 
+Base = declarative_base()
 
 class EmailStatusEnum(str, enum.Enum):
     queued = "queued"
@@ -17,7 +17,7 @@ class EmailStatus(Base):
     __tablename__ = "email_status"
 
     id = Column(Integer, primary_key=True, index=True)
-    request_id = Column(String(128), unique=True, nullable=False, index=True)  # idempotency key
+    request_id = Column(String(128), unique=True, nullable=False, index=True)
     to_email = Column(String(254), nullable=False, index=True)
     subject = Column(String(512), nullable=True)
     body = Column(Text, nullable=True)
