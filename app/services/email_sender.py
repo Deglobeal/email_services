@@ -6,13 +6,20 @@ from app.utils.logger import get_logger
 
 logger = get_logger("email_sender")
 
-async def send_email_async(to_email: str, subject: str, body: str):
-    message = MIMEText(body or "", "html")
+async def send_email_async(
+    to_email: str, subject: str | None = "", body: str | None = ""
+) -> tuple[bool, str | None]:
+    """Send an email asynchronously using SMTP."""
+    subject = subject or ""
+    body = body or ""
+
+    message = MIMEText(body, "html")
     message["From"] = settings.email_from
     message["To"] = to_email
-    message["Subject"] = subject or ""
+    message["Subject"] = subject
 
     smtp = SMTP(hostname=settings.smtp_host, port=settings.smtp_port, start_tls=True)
+
     try:
         await smtp.connect()
         if settings.smtp_user:
