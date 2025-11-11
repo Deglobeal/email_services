@@ -1,6 +1,7 @@
 import aio_pika
 import json
 import logging
+import time
 from typing import Callable, Optional
 from app.config import settings
 
@@ -15,21 +16,21 @@ class RabbitMQManager:
     async def connect(self):
         """Establish connection to RabbitMQ"""
         try:
-            self.connection = await aio_pika.connect_robust(settings.rabbitmq_url)  #type: ignore
-            self.channel = await self.connection.channel()  #type: ignore
+            self.connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+            self.channel = await self.connection.channel()
             
             # Set prefetch count
-            await self.channel.set_qos(prefetch_count=10)       #type: ignore
+            await self.channel.set_qos(prefetch_count=10)
             
             # Declare exchange
-            self.exchange = await self.channel.declare_exchange(        #type: ignore
+            self.exchange = await self.channel.declare_exchange(
                 "notifications.direct",
                 aio_pika.ExchangeType.DIRECT,
                 durable=True
             )
             
             # Declare queues with dead letter exchange
-            self.queues['email'] = await self.channel.declare_queue( #type: ignore
+            self.queues['email'] = await self.channel.declare_queue(
                 "email.queue",
                 durable=True,
                 arguments={
@@ -38,7 +39,7 @@ class RabbitMQManager:
                 }
             )
             
-            self.queues['failed'] = await self.channel.declare_queue( #type: ignore
+            self.queues['failed'] = await self.channel.declare_queue(
                 "failed.queue",
                 durable=True
             )
@@ -64,7 +65,7 @@ class RabbitMQManager:
             delivery_mode=aio_pika.DeliveryMode.PERSISTENT,
             headers={
                 'x-correlation-id': message.get('correlation_id', ''),
-                'x-retry-count': 0
+                'x-retry-count': message.get('retry_count', 0)
             }
         )
         
@@ -89,8 +90,8 @@ class RabbitMQManager:
             failed_message = {
                 'original_message': original_message,
                 'error': error,
-                'failed_at': time.time(), # type: ignore
-                'retry_count': message.headers.get('x-retry-count', 0)
+                'failed_at': time.time(),
+                'retry_count': message.headers.get('x-retry-count', 0) if message.headers else 0
             }
             
             failed_message_body = json.dumps(failed_message).encode()
