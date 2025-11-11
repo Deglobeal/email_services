@@ -1,38 +1,16 @@
-from pydantic import BaseModel, EmailStr, validator
-from typing import Dict, List, Optional, Any
-from datetime import datetime
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional, Dict, Any
 
 class EmailRequest(BaseModel):
-    recipient_email: EmailStr
-    subject: str
-    body: str
-    body_type: str = "html"
-    priority: int = 1
-    correlation_id: Optional[str] = None
-    
-    @validator('priority')
-    def validate_priority(cls, v):
-        if v not in range(1, 6):
-            raise ValueError('Priority must be between 1 and 5')
-        return v
-    
-    @validator('body_type')
-    def validate_body_type(cls, v):
-        if v not in ['html', 'plain']:
-            raise ValueError('Body type must be html or plain')
-        return v
+    request_id: str = Field(..., description="unique idempotency key")
+    to_email: EmailStr
+    subject: Optional[str] = None
+    body: Optional[str] = None
+    meta: Optional[Dict[str, Any]] = {}
 
-class EmailResponse(BaseModel):
+class StandardResponse(BaseModel):
     success: bool
-    message: str
-    correlation_id: Optional[str] = None
-    data: Optional[dict] = None
+    data: Optional[Dict[str, Any]] = None
     error: Optional[str] = None
-
-class HealthCheck(BaseModel):
-    status: str
-    database: bool
-    redis: bool
-    rabbitmq: bool
-    smtp: bool
-    timestamp: datetime
+    message: str
+    meta: Optional[Dict[str, Any]] = {}
