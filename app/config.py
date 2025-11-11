@@ -19,6 +19,9 @@ class Settings :
     smtp_user: str = os.getenv("SMTP_USER", "")
     smtp_pass: str = os.getenv("SMTP_PASS", "")
     email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail")
+    use_real_smtp: bool = os.getenv("USE_REAL_SMTP", "False").lower() in ("true", "1")
+
+    
     max_retry_attempts: int = int(os.getenv("MAX_RETRY_ATTEMPTS", 5))
     redis_url: str = os.getenv("REDIS_URL", "")
 
