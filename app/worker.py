@@ -1,21 +1,27 @@
+# app/worker.py
 import asyncio
 import json
 import logging
 from sqlalchemy.orm import Session
 from aio_pika import IncomingMessage
+from datetime import datetime
 
 from .database import SessionLocal
-from .models import EmailQueue, EmailTemplate
-from .template_engine import template_engine
-from .email_sender import email_sender
+from .models import EmailQueue
+from .email_sender import EmailSender
 from .rabbitmq import rabbitmq_manager
 from .config import settings
 
 logger = logging.getLogger(__name__)
 
-
 class EmailWorker:
     def __init__(self):
+        self.email_sender = EmailSender(
+            smtp_server=settings.smtp_server,
+            smtp_port=settings.smtp_port,
+            username=settings.smtp_username,
+            password=settings.smtp_password
+        )
         self.max_retries = 3
         self.processing = False
     
@@ -24,9 +30,10 @@ class EmailWorker:
         async with message.process():
             try:
                 message_data = json.loads(message.body.decode())
-                logger.info(f"Processing email message: {message_data.get('correlation_id')}")
+                correlation_id = message_data.get('correlation_id', 'unknown')
+                logger.info(f"Processing email message: {correlation_id}")
                 
-                # Update database status
+                # Update database status to processing
                 db = SessionLocal()
                 try:
                     queue_item = db.query(EmailQueue).filter(
@@ -42,69 +49,66 @@ class EmailWorker:
                     queue_item.status = "processing"
                     db.commit()
                     
-                    # Get template
-                    template = db.query(EmailTemplate).filter(
-                        EmailTemplate.name == queue_item.template_name,
-                        EmailTemplate.is_active == True
-                    ).first()
-                    
-                    if not template:
-                        raise ValueError(f"Template '{queue_item.template_name}' not found")
-                    
-                    # Render email
-                    rendered_subject, rendered_body = template_engine.render_email(
-                        template.subject,
-                        template.body_template,
-                        queue_item.variables or {}
-                    )
-                    
                     # Send email
-                    success = email_sender.send_email(
+                    success = self.email_sender.send_email(
                         recipient=queue_item.recipient_email,
-                        subject=rendered_subject,
-                        body=rendered_body
+                        subject=queue_item.subject,
+                        body=queue_item.body,
+                        body_type=queue_item.body_type
                     )
                     
                     if success:
                         queue_item.status = "sent"
-                        queue_item.processed_at = func.now()
-                        logger.info(f"Email sent successfully: {queue_item.correlation_id}")
+                        queue_item.processed_at = datetime.now()
+                        logger.info(f"Email sent successfully: {correlation_id}")
                     else:
-                        raise Exception("Email sending failed")
+                        raise Exception("Email sending failed - circuit breaker open")
                     
                     db.commit()
                     await message.ack()
                     
                 except Exception as e:
-                    logger.error(f"Failed to process email {queue_item.correlation_id}: {e}")
+                    logger.error(f"Failed to process email {correlation_id}: {e}")
                     
                     # Handle retries
-                    queue_item.retry_count += 1
-                    queue_item.error_message = str(e)
+                    current_retry_count = message.headers.get('x-retry-count', 0)
                     
-                    if queue_item.retry_count >= queue_item.max_retries:
+                    if current_retry_count >= self.max_retries:
+                        # Permanent failure - move to failed queue
                         queue_item.status = "failed"
-                        logger.error(f"Email permanently failed: {queue_item.correlation_id}")
-                        await message.ack()
+                        queue_item.error_message = str(e)
+                        queue_item.processed_at = datetime.now()
+                        db.commit()
+                        
+                        await rabbitmq_manager.move_to_failed_queue(message, str(e))
+                        logger.error(f"Email permanently failed after {current_retry_count} retries: {correlation_id}")
                     else:
+                        # Requeue with incremented retry count
                         queue_item.status = "pending"
+                        queue_item.retry_count = current_retry_count + 1
+                        queue_item.error_message = str(e)
+                        db.commit()
+                        
                         # Requeue with delay
-                        await self.requeue_message(message_data, queue_item.retry_count)
+                        await self.requeue_message(message_data, current_retry_count + 1)
                         await message.ack()
-                    
-                    db.commit()
+                        logger.warning(f"Email requeued for retry {current_retry_count + 1}: {correlation_id}")
                     
             except Exception as e:
                 logger.error(f"Message processing error: {e}")
+                # Nack the message without requeue
                 await message.nack(requeue=False)
     
     async def requeue_message(self, message_data: dict, retry_count: int):
         """Requeue message with exponential backoff"""
-        delay = min(300, 2 ** retry_count * 60)  # Max 5 minutes delay
+        delay = min(300, (2 ** retry_count) * 30)  # Max 5 minutes delay, exponential backoff
         
-        logger.info(f"Requeuing message {message_data['correlation_id']} with {delay}s delay")
+        logger.info(f"Requeuing message {message_data['correlation_id']} with {delay}s delay (retry {retry_count})")
         
         await asyncio.sleep(delay)
+        
+        # Update message headers with new retry count
+        message_data['retry_count'] = retry_count
         await rabbitmq_manager.publish_email_message(message_data)
     
     async def start_processing(self):
@@ -123,18 +127,26 @@ class EmailWorker:
         self.processing = False
         logger.info("Stopping email worker")
 
+# Create global worker instance
 email_worker = EmailWorker()
 
-# For running worker separately
 async def main():
+    """Main function to run the worker"""
     worker = EmailWorker()
-    await worker.start_processing()
+    logger.info("Starting Email Service Worker...")
     
     try:
-        # Keep running
-        while True:
+        await worker.start_processing()
+        
+        # Keep the worker running
+        while worker.processing:
             await asyncio.sleep(1)
+            
     except KeyboardInterrupt:
+        logger.info("Received interrupt signal...")
+        await worker.stop_processing()
+    except Exception as e:
+        logger.error(f"Worker crashed: {e}")
         await worker.stop_processing()
 
 if __name__ == "__main__":

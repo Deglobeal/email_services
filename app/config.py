@@ -1,10 +1,9 @@
 import os
-from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
 load_dotenv()
 
-class Settings(BaseSettings):
+class Settings:
     # Database
     database_url: str =os.getenv("DATABASE_URL")
 
@@ -21,8 +20,7 @@ class Settings(BaseSettings):
     smtp_password: str = os.getenv("SMTP_PASSWORD", "")
 
     # Service URLs
-    template_service_url: str = os.getenv("TEMPLATE_SERVICE_URL", "http://localhost:8001")
-    
+    api_gateway_url: str = os.getenv("API_GATEWAY_URL", "http://localhost:8000")
     class Config:
         env_file = ".env"
 
