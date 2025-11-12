@@ -39,7 +39,7 @@ async def send_email_async(to_email: str, subject: str, body: str, html: bool = 
             smtp = SMTP(
                 hostname=settings.smtp_host,
                 port=settings.smtp_port,  # Should be 587 for STARTTLS
-                SMTP_SSL=True,
+                start_tls=True,
                 timeout=10
             )
             await smtp.connect()
