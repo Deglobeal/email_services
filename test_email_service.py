@@ -14,7 +14,7 @@ BASE_URL = "http://127.0.0.1:8000"
 # Async test for SMTP email directly
 # -----------------------------
 async def test_send_email():
-    to_email = "your_test_email@gmail.com"  # Replace with your real test email
+    to_email = "kachimaxy2@gmail.com"  # Replace with your real test email
     subject = "Stage 4 Email Service SMTP Test"
     body = "Hello! This is a direct SMTP test email."
 
@@ -50,7 +50,7 @@ def test_api_endpoints():
 
     # Send email endpoint
     payload = {
-        "to": "your_test_email@gmail.com",
+        "to": "kachimaxy2@gmail.com",
         "subject": "Stage 4 /send_email Test",
         "body": "Hello from /send_email endpoint test!",
         "request_id": "test123"
