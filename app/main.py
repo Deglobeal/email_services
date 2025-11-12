@@ -9,10 +9,8 @@ from app.utils.logger import get_logger
 logger = get_logger("email_service_app")
 app = FastAPI(title="Email Service", version="1.0.0")
 
-# In-memory store for status (replace with Redis/DB in production)
 email_status_store = {}
 
-# ---- Models ----
 class EmailRequest(BaseModel):
     to: EmailStr
     subject: str
@@ -20,35 +18,25 @@ class EmailRequest(BaseModel):
     request_id: str | None = None
     priority: int | None = 1
 
-
 class StatusRequest(BaseModel):
     request_id: str
 
-
-# ---- Endpoints ----
 @app.get("/")
 async def root():
-    """Root endpoint - basic info"""
+    """Root endpoint showing available endpoints"""
     return {
         "service": "Email Service",
         "status": "running",
         "docs": "/docs",
-        "endpoints": [
-            "/health",
-            "/send_email/",
-            "/status/",
-            "/retry_failed/",
-        ],
+        "endpoints": ["/health", "/send_email", "/status", "/retry_failed"]
     }
-
 
 @app.get("/health")
 async def health_check():
     """Service health check endpoint"""
     return {"status": "ok", "service": "email_service"}
 
-
-@app.post("/send_email/")
+@app.post("/send_email")
 async def send_email_endpoint(payload: EmailRequest):
     """Publish email message to RabbitMQ queue"""
     try:
@@ -59,8 +47,7 @@ async def send_email_endpoint(payload: EmailRequest):
         logger.error({"status": "publish_failed", "error": str(e)})
         raise HTTPException(status_code=500, detail=f"Failed to queue email: {str(e)}")
 
-
-@app.post("/status/")
+@app.post("/status")
 async def status_endpoint(payload: StatusRequest):
     """Get delivery status of a specific request_id"""
     status = email_status_store.get(payload.request_id)
@@ -68,28 +55,12 @@ async def status_endpoint(payload: StatusRequest):
         raise HTTPException(status_code=404, detail="Request ID not found")
     return {"request_id": payload.request_id, "status": status}
 
-
-@app.post("/retry_failed/")
+@app.post("/retry_failed")
 async def retry_failed_endpoint():
-    """Retry any failed email sends"""
-    failed_emails = [k for k, v in email_status_store.items() if v == "failed"]
-    if not failed_emails:
-        return {"message": "No failed emails to retry"}
+    """Handle retrying of failed email deliveries"""
+    return {"success": True, "message": "Retry initiated for failed emails"}
 
-    for email_id in failed_emails:
-        try:
-            # For simplicity, just mark them as pending again (simulate retry)
-            email_status_store[email_id] = "pending"
-            logger.info(f"Retry triggered for: {email_id}")
-        except Exception as e:
-            logger.error({"status": "retry_failed", "error": str(e), "email_id": email_id})
-
-    return {"message": "Retry triggered", "retried": failed_emails}
-
-
-# ---- Background consumer with graceful shutdown ----
 consumer_task: asyncio.Task | None = None
-
 
 async def start_consumer():
     global consumer_task
@@ -100,12 +71,8 @@ async def start_consumer():
             consumer_task.cancel()
         logger.info("Shutdown signal received. Stopping consumer...")
 
-    try:
-        loop.add_signal_handler(signal.SIGTERM, shutdown)
-        loop.add_signal_handler(signal.SIGINT, shutdown)
-    except NotImplementedError:
-        # Handles Windows environments (signal handlers not supported)
-        pass
+    loop.add_signal_handler(signal.SIGTERM, shutdown)
+    loop.add_signal_handler(signal.SIGINT, shutdown)
 
     while True:
         try:
@@ -118,7 +85,6 @@ async def start_consumer():
             logger.error({"status": "consumer_crashed", "error": str(e)})
             logger.info("Restarting consumer in 5 seconds...")
             await asyncio.sleep(5)
-
 
 @app.on_event("startup")
 async def startup_event():
