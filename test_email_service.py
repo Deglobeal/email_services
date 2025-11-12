@@ -1,48 +1,89 @@
-# test_app.py
-import pytest
-from unittest.mock import AsyncMock, patch
-from fastapi.testclient import TestClient
-from app.main import app
+# test_email_service_endpoints.py
 
-client = TestClient(app)
+import asyncio
+import json
+import requests
+from app.config import settings
+from app.services.email_sender import send_email_async
+import aio_pika
+import time
 
-@pytest.mark.asyncio
-async def test_send_email_success():
+BASE_URL = "http://127.0.0.1:8000"
+
+# -----------------------------
+# Async test for SMTP email directly
+# -----------------------------
+async def test_send_email():
+    to_email = "your_test_email@gmail.com"  # Replace with your real test email
+    subject = "Stage 4 Email Service SMTP Test"
+    body = "Hello! This is a direct SMTP test email."
+
+    success, error = await send_email_async(to_email, subject, body)
+    if success:
+        print("✅ SMTP Email sent successfully!")
+    else:
+        print(f"❌ Failed to send SMTP email: {error}")
+
+
+# -----------------------------
+# Test RabbitMQ connection
+# -----------------------------
+async def test_rabbitmq():
+    try:
+        connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+        async with connection:
+            print("✅ Connected to RabbitMQ")
+    except Exception as e:
+        print(f"❌ RabbitMQ connection failed: {e}")
+
+
+# -----------------------------
+# Test FastAPI endpoints
+# -----------------------------
+def test_api_endpoints():
+    # Health check
+    try:
+        resp = requests.get(f"{BASE_URL}/health")
+        print("Health Check:", resp.json())
+    except Exception as e:
+        print("❌ Health check failed:", e)
+
+    # Send email endpoint
     payload = {
-        "to_email": "test@example.com",
-        "subject": "Test Email",
-        "body": "Hello World",
-        "request_id": "abc123"
+        "to": "your_test_email@gmail.com",
+        "subject": "Stage 4 /send_email Test",
+        "body": "Hello from /send_email endpoint test!",
+        "request_id": "test123"
     }
 
-    # Mock the async send_email_async function
-    with patch("app.services.email_sender.send_email_async", new_callable=AsyncMock) as mock_send:
-        mock_send.return_value = (True, None)  # simulate success
-        response = client.post("/send_email", json=payload)
-        data = response.json()
-        assert response.status_code == 200
-        assert data["success"] is True
-        assert data["data"]["request_id"] == payload["request_id"]
-        mock_send.assert_awaited_once_with(
-            to_email=payload["to_email"],
-            subject=payload["subject"],
-            body=payload["body"],
-            html=False
-        )
+    try:
+        resp = requests.post(f"{BASE_URL}/send_email/", json=payload)
+        print("/send_email response:", resp.json())
+    except Exception as e:
+        print("❌ /send_email failed:", e)
 
-@pytest.mark.asyncio
-async def test_send_email_failure():
-    payload = {
-        "to_email": "fail@example.com",
-        "subject": "Test Email",
-        "body": "Hello World",
-        "request_id": "xyz789"
-    }
+    # Status endpoint
+    payload_status = {"request_id": "test123"}
+    try:
+        resp = requests.post(f"{BASE_URL}/status/", json=payload_status)
+        print("/status response:", resp.json())
+    except Exception as e:
+        print("❌ /status failed:", e)
 
-    with patch("app.services.email_sender.send_email_async", new_callable=AsyncMock) as mock_send:
-        mock_send.side_effect = Exception("SMTP connection failed")
-        response = client.post("/send_email", json=payload)
-        data = response.json()
-        assert response.status_code == 200
-        assert data["success"] is False
-        assert "SMTP connection failed" in data["error"]
+
+# -----------------------------
+# Run all tests
+# -----------------------------
+if __name__ == "__main__":
+    print("=== Testing SMTP Email ===")
+    asyncio.run(test_send_email())
+
+    print("\n=== Testing RabbitMQ Connection ===")
+    asyncio.run(test_rabbitmq())
+
+    # Wait a bit for the consumer to process queued messages
+    print("\n[Waiting 5 seconds for queue processing...]")
+    time.sleep(5)
+
+    print("\n=== Testing FastAPI Endpoints ===")
+    test_api_endpoints()

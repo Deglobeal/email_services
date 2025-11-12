@@ -11,3 +11,10 @@ email-validator==2.1.0
 python-dotenv==1.0.0
 celery==5.3.4
 tenacity==8.2.3
+fastapi
+uvicorn[standard]
+aiosmtplib
+aio-pika
+python-dotenv
+python-json-logger
+pydantic

@@ -21,6 +21,11 @@ class Settings :
     email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail")
     use_real_smtp: bool = os.getenv("USE_REAL_SMTP", "False").lower() in ("true", "1")
 
+    #  RabbitMQ queues
+    email_queue_name: str = os.getenv("EMAIL_QUEUE_NAME", "email.queue")
+    dead_letter_queue_name: str = os.getenv("DEAD_LETTER_QUEUE_NAME", "failed.queue")
+    exchange_name: str = os.getenv("EXCHANGE_NAME", "notifications.direct")
+
     
     max_retry_attempts: int = int(os.getenv("MAX_RETRY_ATTEMPTS", 5))
     redis_url: str = os.getenv("REDIS_URL", "")

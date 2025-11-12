@@ -1,32 +1,33 @@
 import time
-from typing import Callable
 from app.utils.logger import get_logger
 
 logger = get_logger("circuit_breaker")
 
-class SimpleCircuitBreaker:
-    def __init__(self, failure_threshold=5, recovery_seconds=60):
+class CircuitBreaker:
+    def __init__(self, failure_threshold=5, recovery_time=30):
         self.failure_threshold = failure_threshold
-        self.recovery_seconds = recovery_seconds
-        self.fail_count = 0
-        self.opened_at = None
-
-    def record_failure(self):
-        self.fail_count += 1
-        if self.fail_count >= self.failure_threshold:
-            self.opened_at = time.time()
-            logger.warning("circuit_opened", extra={"fail_count": self.fail_count})
+        self.recovery_time = recovery_time
+        self.failures = 0
+        self.last_failure_time = None
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF-OPEN
 
     def record_success(self):
-        self.fail_count = 0
-        self.opened_at = None
+        self.failures = 0
+        self.state = "CLOSED"
 
-    def is_open(self):
-        if self.opened_at is None:
-            return False
-        if time.time() - self.opened_at > self.recovery_seconds:
-            # half-open / attempt recovery
-            self.fail_count = 0
-            self.opened_at = None
-            return False
+    def record_failure(self):
+        self.failures += 1
+        self.last_failure_time = time.time()
+        if self.failures >= self.failure_threshold:
+            self.state = "OPEN"
+            logger.warning({"status": "circuit_open", "failures": self.failures})
+
+    def allow_request(self):
+        if self.state == "OPEN":
+            if (time.time() - self.last_failure_time) > self.recovery_time: # type: ignore 
+                self.state = "HALF-OPEN"
+                logger.info({"status": "circuit_half_open"})
+                return True
+            else:
+                return False
         return True

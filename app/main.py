@@ -1,59 +1,61 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from app.schemas import EmailRequest, StandardResponse
-from app.config import settings
+from pydantic import BaseModel, EmailStr
+import asyncio
+from app.services.queue_publisher import publish_email
+from app.services.queue_consumer import consume
 from app.utils.logger import get_logger
-from app.services.email_sender import send_email_async
-from app.services.email_service import send_email
 
-logger = get_logger("main")
-app = FastAPI(title="email_service", version="1.0")
+logger = get_logger("email_service_app")
+app = FastAPI(title="Email Service", version="1.0.0")
 
+# In-memory store for status (replace with Redis/DB in production)
+email_status_store = {}
 
-@app.get("/health", response_model=StandardResponse)
-def health():
-    return JSONResponse({
-        "success": True,
-        "message": "email service healthy",
-        "data": {},
-        "meta": {}
-    })
+class EmailRequest(BaseModel):
+    to: EmailStr
+    subject: str
+    body: str
+    request_id: str | None = None
+    priority: int | None = 1
 
+class StatusRequest(BaseModel):
+    request_id: str
 
-@app.post("/send_email", response_model=StandardResponse)
+@app.get("/health")
+async def health_check():
+    """
+    Service health check endpoint
+    """
+    return {"status": "ok", "service": "email_service"}
+
+@app.post("/send_email/")
 async def send_email_endpoint(payload: EmailRequest):
     """
-    Send email using either real Gmail SMTP or fallback service.
+    Publish email message to RabbitMQ queue
     """
-    if settings.use_real_smtp:
-        success, error = await send_email_async(
-            to_email=payload.to_email,
-            subject=payload.subject or "No Subject",
-            body=payload.body or ""
-        )
-    else:
-        try:
-            await send_email(
-                recipient=payload.to_email,
-                subject=payload.subject or "No Subject",
-                body=payload.body or ""
-            )
-            success, error = True, None
-        except Exception as e:
-            success, error = False, str(e)
+    try:
+        await publish_email(payload.to, payload.subject, payload.body)
+        email_status_store[payload.request_id or payload.to] = "pending"
+        return {"success": True, "message": "Email queued for delivery"}
+    except Exception as e:
+        logger.error({"status": "publish_failed", "error": str(e)})
+        raise HTTPException(status_code=500, detail=f"Failed to queue email: {str(e)}")
 
-    if success:
-        return {
-            "success": True,
-            "data": {"request_id": payload.request_id},
-            "message": "Email sent successfully",
-            "meta": {}
-        }
-    else:
-        return {
-            "success": False,
-            "error": error,
-            "message": "Failed to send email",
-            "data": {},
-            "meta": {}
-        }
+@app.post("/status/")
+async def status_endpoint(payload: StatusRequest):
+    """
+    Get delivery status of a specific request_id
+    """
+    status = email_status_store.get(payload.request_id)
+    if not status:
+        raise HTTPException(status_code=404, detail="Request ID not found")
+    return {"request_id": payload.request_id, "status": status}
+
+# Background consumer
+@app.on_event("startup")
+async def startup_event():
+    """
+    Start the RabbitMQ consumer in background on service startup
+    """
+    loop = asyncio.get_event_loop()
+    loop.create_task(consume())
