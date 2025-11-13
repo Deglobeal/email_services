@@ -170,3 +170,56 @@
 2025-11-13 11:24:56,576 | INFO | email_service_app | Service startup — launching consumer background task.
 2025-11-13 11:24:56,576 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
 2025-11-13 11:24:56,577 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:27:28,798 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
+2025-11-13 11:32:35,798 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:32:35,799 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:32:35,799 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:32:37,364 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:32:37,365 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:32:37,365 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:34:41,728 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:34:41,729 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:34:41,729 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:34:42,835 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:34:42,836 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:34:42,836 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:39:23,620 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:39:23,621 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:39:23,621 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:39:25,072 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:39:25,072 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:39:25,073 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:39:48,593 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:39:48,593 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:39:48,595 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:39:49,697 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:39:49,698 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:39:49,699 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:41:18,061 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:41:18,062 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:41:18,062 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:41:19,654 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:41:19,655 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:41:19,655 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:42:28,959 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
+2025-11-13 11:45:10,288 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:45:10,289 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:45:10,289 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:46:09,276 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:46:09,276 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:46:09,277 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:47:38,963 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:47:38,964 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:47:38,964 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:47:40,386 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:47:40,387 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:47:40,387 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:47:52,871 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:47:52,871 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:47:52,872 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:47:54,006 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:47:54,007 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:47:54,007 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:47:58,608 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:47:58,608 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:47:58,608 | INFO | email_service_app | Application shutdown complete.

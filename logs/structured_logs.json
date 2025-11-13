@@ -123,3 +123,24 @@
 {"asctime": "2025-11-13 11:20:47,679", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
 {"asctime": "2025-11-13 11:24:54,941", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
 {"asctime": "2025-11-13 11:24:59,531", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:30:56,784", "levelname": "ERROR", "name": "email_sender", "message": "smtp_error", "attempt": 1, "to_email": "kachimaxy2@gmial.com", "error": "Timed out connecting to smtp.gmail.com on port 465", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:31:11,684", "levelname": "INFO", "name": "email_sender", "message": "email_sent", "to_email": "kachimaxy2@gmial.com", "subject": "wrHNTEGFR", "attempt": 2, "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:31:11,685", "levelname": "INFO", "name": "email_service", "message": "email_send_success", "recipient": "kachimaxy2@gmial.com", "subject": "wrHNTEGFR", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:31:11,685", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "email_delivered", "request_id": null, "service": "email_service_app"}
+{"asctime": "2025-11-13 11:32:35,798", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:32:40,998", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:34:41,728", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:34:44,783", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:39:23,619", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:39:34,001", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:39:48,592", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:39:54,047", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:41:18,060", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:41:43,581", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:45:10,288", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:46:10,920", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:47:38,963", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:47:41,848", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:47:52,870", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:47:55,408", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:47:58,607", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}

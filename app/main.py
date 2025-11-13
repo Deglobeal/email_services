@@ -12,7 +12,8 @@ from fastapi.staticfiles import StaticFiles
 from app.services.queue_publisher import publish_email
 from app.services.queue_consumer import consume
 from app.utils.logger import get_logger
-
+from app.services.email_sender import send_email_async
+from app.config import settings
 
 if os.name == "nt":
     import ctypes
@@ -143,6 +144,19 @@ async def send_email_endpoint(payload: EmailRequest):
     except Exception as e:
         logger.error(f"Failed to queue email: {str(e)} for {payload.to}")
         raise HTTPException(status_code=500, detail=f"Failed to queue email: {str(e)}")
+
+@app.get("/test_smtp")
+async def test_smtp():
+    """Test Gmail SMTP connection from deployed server"""
+    to_test_email = settings.smtp_user
+    subject = "SMTP Test"
+    body = "This is a test email from the deployed server."
+
+    success, error = await send_email_async(to_test_email, subject, body)
+    if success:
+        return {"success": True, "message": "SMTP connection successful, email sent!"}
+    return {"success": False, "error": error}
+
 
 
 @app.post("/status")

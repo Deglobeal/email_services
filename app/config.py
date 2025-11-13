@@ -20,7 +20,7 @@ class Settings :
     smtp_pass: str = os.getenv("SMTP_PASS", "")
     email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail.com")
     use_real_smtp: bool = os.getenv("USE_REAL_SMTP", "False").lower() in ("true", "1")
-
+    use_ssl: bool = os.getenv("USE_SSL", "True").lower() in ("true", "1")
     #  RabbitMQ queues
     email_queue_name: str = os.getenv("EMAIL_QUEUE_NAME", "email.queue")
     dead_letter_queue_name: str = os.getenv("DEAD_LETTER_QUEUE_NAME", "failed.queue")
