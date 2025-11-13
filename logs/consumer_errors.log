@@ -1,0 +1,10 @@
+2025-11-13 08:47:01,937 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 08:50:07,955 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 08:53:20,026 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:01:16,688 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:01:53,065 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 09:02:30,655 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:06:55,634 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:08:01,690 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 09:10:29,959 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:14:05,649 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}

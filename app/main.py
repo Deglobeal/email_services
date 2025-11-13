@@ -4,6 +4,8 @@ import asyncio
 import signal
 import platform
 import os
+import json
+from fastapi.responses import HTMLResponse
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -170,3 +172,153 @@ async def startup_event():
     """Start the RabbitMQ consumer on service startup"""
     logger.info("Service startup — launching consumer background task.")
     asyncio.create_task(start_consumer())
+
+
+# logs html endpoint
+
+
+
+@app.get("/logs", response_class=HTMLResponse)
+async def view_logs():
+    """Render structured JSON logs as a color-coded HTML table"""
+    log_file_path = os.path.join("logs", "structured_logs.json")
+    
+    html_content = """
+    <html>
+    <head>
+        <title>Email Service Logs</title>
+        <meta http-equiv="refresh" content="5">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            .INFO { background-color: #d4edda; }
+            .WARNING { background-color: #fff3cd; }
+            .ERROR { background-color: #f8d7da; }
+            .DEBUG { background-color: #d1ecf1; }
+            .CRITICAL { background-color: #f5c6cb; }
+        </style>
+    </head>
+    <body>
+        <h1>Email Service Logs</h1>
+        <table>
+            <tr>
+                <th>Time</th>
+                <th>Level</th>
+                <th>Request ID</th>
+                <th>Message</th>
+            </tr>
+    """
+
+    # Check if log file exists
+    if os.path.exists(log_file_path):
+        with open(log_file_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    log_entry = json.loads(line)
+                    level = log_entry.get("levelname", "")
+                    html_content += f"""
+                    <tr class="{level}">
+                        <td>{log_entry.get('asctime','')}</td>
+                        <td>{level}</td>
+                        <td>{log_entry.get('request_id','')}</td>
+                        <td>{log_entry.get('message','')}</td>
+                    </tr>
+                    """
+                except json.JSONDecodeError:
+                    continue
+    else:
+        html_content += "<tr><td colspan='4'>No logs found.</td></tr>"
+
+    html_content += """
+        </table>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
+    """Render structured JSON logs as a color-coded HTML table"""
+    log_file_path = "logs/structured_logs.json"
+    
+    html_content = """
+    <html>
+    <head>
+        <title>Email Service Logs</title>
+        <meta http-equiv="refresh" content="5">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            .INFO { background-color: #d4edda; }      /* green */
+            .WARNING { background-color: #fff3cd; }   /* yellow */
+            .ERROR { background-color: #f8d7da; }     /* red */
+            .DEBUG { background-color: #d1ecf1; }     /* cyan */
+            .CRITICAL { background-color: #f5c6cb; }  /* dark red */
+        </style>
+    </head>
+    <body>
+        <h1>Email Service Logs</h1>
+        <table>
+            <tr>
+                <th>Time</th>
+                <th>Level</th>
+                <th>Request ID</th>
+                <th>Message</th>
+            </tr>
+    """
+
+    try:
+        with open(log_file_path, "r") as f:
+            for line in f:
+                try:
+                    log_entry = json.loads(line)
+                    level = log_entry.get("levelname", "")
+                    html_content += f"""
+                    <tr class="{level}">
+                        <td>{log_entry.get('asctime', '')}</td>
+                        <td>{level}</td>
+                        <td>{log_entry.get('request_id', '')}</td>
+                        <td>{log_entry.get('message', '')}</td>
+                    </tr>
+                    """
+                except json.JSONDecodeError:
+                    continue
+    except FileNotFoundError:
+        html_content += "<tr><td colspan='4'>No logs found.</td></tr>"
+
+    html_content += """
+        </table>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
+
+    """Render structured logs as a simple HTML page"""
+    log_file_path = "logs/structured_logs.json"
+    logs_html = "<h1>Email Service Logs</h1><table border='1' style='border-collapse: collapse;'>"
+    logs_html += "<tr><th>Time</th><th>Level</th><th>Request ID</th><th>Message</th></tr>"
+
+    try:
+        with open(log_file_path, "r") as f:
+            for line in f:
+                try:
+                    log_entry = json.loads(line)
+                    logs_html += (
+                        f"<tr>"
+                        f"<td>{log_entry.get('asctime', '')}</td>"
+                        f"<td>{log_entry.get('levelname', '')}</td>"
+                        f"<td>{log_entry.get('request_id', '')}</td>"
+                        f"<td>{log_entry.get('message', '')}</td>"
+                        f"</tr>"
+                    )
+                except json.JSONDecodeError:
+                    continue
+    except FileNotFoundError:
+        logs_html += "<tr><td colspan='4'>No logs found.</td></tr>"
+
+    logs_html += "</table>"
+    return logs_html
