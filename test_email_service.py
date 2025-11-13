@@ -1,49 +1,44 @@
 import asyncio
 import aio_pika
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-RABBIT_URL = os.getenv("QUEUE_HOST")
-EMAIL_QUEUE = os.getenv("EMAIL_QUEUE_NAME", "email.queue")
-DLQ = os.getenv("DEAD_LETTER_QUEUE_NAME", "dead_letter.queue")
-EXCHANGE = os.getenv("EXCHANGE_NAME", "notifications.direct")
+from app.config import settings
 
 async def reset_queues():
-    print(f"🔄 Connecting to {RABBIT_URL}")
-    connection = await aio_pika.connect_robust(RABBIT_URL)
+    print(f"Connecting to RabbitMQ: {settings.queue_host}")
+    connection = await aio_pika.connect_robust(settings.queue_host)
     async with connection:
         channel = await connection.channel()
-
-        # Try deleting old queues/exchanges
-        print("🗑️ Deleting existing queues (if they exist)...")
-        for q in [EMAIL_QUEUE, DLQ]:
-            try:
-                await channel.queue_delete(q)
-                print(f"✅ Deleted queue: {q}")
-            except Exception as e:
-                print(f"⚠️ Could not delete {q}: {e}")
+        
+        # Delete existing queues (if any)
+        try:
+            await channel.queue_delete(settings.email_queue_name)
+            print(f"Deleted existing queue: {settings.email_queue_name}")
+        except Exception as e:
+            print(f"No existing queue to delete: {settings.email_queue_name} ({e})")
 
         try:
-            await channel.exchange_delete(EXCHANGE)
-            print(f"✅ Deleted exchange: {EXCHANGE}")
+            await channel.queue_delete(settings.dead_letter_queue_name)
+            print(f"Deleted existing queue: {settings.dead_letter_queue_name}")
         except Exception as e:
-            print(f"⚠️ Could not delete exchange: {e}")
+            print(f"No existing queue to delete: {settings.dead_letter_queue_name} ({e})")
 
-        # Recreate fresh
-        print("🔧 Creating new exchange and queues...")
-        exchange = await channel.declare_exchange(EXCHANGE, aio_pika.ExchangeType.DIRECT, durable=True)
-        dlq = await channel.declare_queue(DLQ, durable=True)
-        await dlq.bind(exchange, routing_key="failed")
-
-        email_queue = await channel.declare_queue(
-            EMAIL_QUEUE,
-            durable=True,
-            arguments={"x-dead-letter-exchange": "dead.letter.exchange"}
+        # Recreate dead-letter queue (just durable)
+        await channel.declare_queue(
+            settings.dead_letter_queue_name,
+            durable=True
         )
-        await email_queue.bind(exchange, routing_key=EMAIL_QUEUE)
+        print(f"Created dead-letter queue: {settings.dead_letter_queue_name}")
 
-        print(f"✅ Recreated {EMAIL_QUEUE} and {DLQ} successfully.")
+        # Recreate main queue with dead-letter exchange
+        await channel.declare_queue(
+            settings.email_queue_name,
+            durable=True,
+            arguments={
+                "x-dead-letter-exchange": settings.dead_letter_queue_name
+            },
+        )
+        print(f"Created main queue with DLX: {settings.email_queue_name}")
 
-asyncio.run(reset_queues())
+    print("✅ Queue reset complete!")
+
+if __name__ == "__main__":
+    asyncio.run(reset_queues())

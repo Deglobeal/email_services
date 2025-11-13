@@ -30,7 +30,7 @@ class Settings:
 
     # RabbitMQ queues
     email_queue_name: str = os.getenv("EMAIL_QUEUE_NAME", "email.queue")
-    dead_letter_queue_name: str = os.getenv("DEAD_LETTER_QUEUE_NAME", "dead_letter.queue")
+    dead_letter_queue_name: str = os.getenv("DEAD_LETTER_QUEUE_NAME", "dead.letter.exchange")
     exchange_name: str = os.getenv("EXCHANGE_NAME", "notifications.direct")
 
     # Service runtime

@@ -8,7 +8,7 @@ from app.utils.logger import get_logger
 logger = get_logger("queue_consumer")
 
 # In-memory status tracking
-email_status_store = {}
+email_status_store: dict[str, str] = {}
 
 async def consume() -> None:
     connection: aio_pika.abc.AbstractRobustConnection | None = None
@@ -16,21 +16,32 @@ async def consume() -> None:
     queue: aio_pika.abc.AbstractQueue | None = None
 
     try:
-        connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+        rabbitmq_url = settings.queue_host
+        logger.info(f"🔍 Connecting to RabbitMQ at: {rabbitmq_url}")
+        connection = await aio_pika.connect_robust(rabbitmq_url)
+
         async with connection:
             channel = await connection.channel()
-            queue = await channel.declare_queue(settings.email_queue_name, durable=True)
-            dead_letter_queue = await channel.declare_queue(settings.dead_letter_queue_name, durable=True)
+
+            queue = await channel.declare_queue(
+                settings.email_queue_name,
+                durable=True,
+                arguments={"x-dead-letter-exchange": "dead.letter.exchange"},
+            )
+
+            dead_letter_queue = await channel.declare_queue(
+                settings.dead_letter_queue_name, durable=True
+            )
 
             logger.info({"status": "started_consuming", "queue": queue.name})
 
             async with queue.iterator() as queue_iter:
                 async for message in queue_iter:
                     async with message.process():
-                        data: dict = {}  # define upfront
+                        data: dict = {}
                         try:
                             data = json.loads(message.body.decode())
-                            request_id = data.get("request_id") or data.get("to")
+                            request_id = str(data.get("request_id") or data.get("to") or "unknown")
                             email_status_store[request_id] = "pending"
 
                             recipient = data.get("to")
@@ -48,19 +59,23 @@ async def consume() -> None:
 
                             email_status_store[request_id] = "delivered"
                             logger.info({"status": "email_delivered", "request_id": request_id})
+
                         except Exception as e:
-                            request_id = data.get("request_id") or data.get("to")
+                            request_id = str(data.get("request_id") or data.get("to") or "unknown")
                             email_status_store[request_id] = "failed"
                             logger.error({"status": "email_failed", "error": str(e), "request_id": request_id})
 
-                            # send to dead-letter queue
                             try:
                                 await channel.default_exchange.publish(
-                                    aio_pika.Message(body=message.body),
+                                    aio_pika.Message(
+                                        body=message.body,
+                                        delivery_mode=aio_pika.DeliveryMode.PERSISTENT,
+                                    ),
                                     routing_key=settings.dead_letter_queue_name
                                 )
+                                logger.info({"status": "sent_to_dlq", "request_id": request_id})
                             except Exception as dlq_error:
-                                logger.error({"status": "dlq_failed", "error": str(dlq_error)})
+                                logger.error({"status": "dlq_failed", "error": str(dlq_error), "request_id": request_id})
 
                         await asyncio.sleep(0.01)
 
@@ -75,3 +90,6 @@ async def consume() -> None:
     except Exception as e:
         logger.error({"status": "consumer_exception", "error": str(e)})
         raise
+
+if __name__ == "__main__":
+    asyncio.run(consume())
