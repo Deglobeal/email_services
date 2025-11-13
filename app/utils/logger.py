@@ -6,6 +6,7 @@ from logging.handlers import RotatingFileHandler
 from pythonjsonlogger.json import JsonFormatter
 from colorama import Fore, Style, init
 from typing import Optional
+import io
 
 # Initialize color output for Windows terminals
 init(autoreset=True)
@@ -74,8 +75,10 @@ def get_logger(name: str) -> logging.Logger:
     logger.setLevel(logging.INFO)
 
     if not logger.handlers:
-        # 🎨 Console handler (colorized output)
-        console_handler = logging.StreamHandler(sys.stdout)
+        # 🎨 Console handler (UTF-8 safe + colorized)
+        console_handler = logging.StreamHandler(
+            io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+        )
         console_handler.setFormatter(
             ColorFormatter("%(asctime)s | %(levelname)s | %(name)s | %(message)s")
         )

@@ -8,3 +8,47 @@
 2025-11-13 09:08:01,690 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
 2025-11-13 09:10:29,959 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
 2025-11-13 09:14:05,649 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 09:19:42,870 | ERROR | smtp_error
+2025-11-13 09:19:55,720 | ERROR | smtp_error
+2025-11-13 09:20:10,566 | ERROR | smtp_error
+2025-11-13 09:20:29,422 | ERROR | smtp_error
+2025-11-13 09:20:56,260 | ERROR | smtp_error
+2025-11-13 09:21:28,271 | ERROR | email_failed_after_retries
+2025-11-13 09:21:28,272 | ERROR | email_send_failed
+2025-11-13 09:21:28,273 | ERROR | {'status': 'email_failed', 'error': 'Failed after 5 attempts', 'request_id': 'user@example.com'}
+2025-11-13 09:29:55,460 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:33:01,759 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 09:35:56,819 | ERROR | smtp_error
+2025-11-13 09:36:09,671 | ERROR | smtp_error
+2025-11-13 09:36:24,532 | ERROR | smtp_error
+2025-11-13 09:36:43,411 | ERROR | smtp_error
+2025-11-13 09:37:10,266 | ERROR | smtp_error
+2025-11-13 09:37:42,279 | ERROR | email_failed_after_retries
+2025-11-13 09:37:42,280 | ERROR | email_send_failed
+2025-11-13 09:37:42,280 | ERROR | {'status': 'email_failed', 'error': 'Failed after 5 attempts', 'request_id': 'kachimaxy2@gmial.com'}
+2025-11-13 09:43:31,736 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:52:01,564 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:55:38,374 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:58:26,932 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 09:59:02,774 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 10:00:07,638 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 10:00:37,402 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 10:01:37,743 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}
+2025-11-13 10:01:52,745 | ERROR | smtp_error
+2025-11-13 10:02:05,601 | ERROR | smtp_error
+2025-11-13 10:02:20,449 | ERROR | smtp_error
+2025-11-13 10:02:39,317 | ERROR | smtp_error
+2025-11-13 10:03:06,167 | ERROR | smtp_error
+2025-11-13 10:03:38,176 | ERROR | email_failed_after_retries
+2025-11-13 10:03:38,176 | ERROR | email_send_failed
+2025-11-13 10:03:38,177 | ERROR | {'status': 'email_failed', 'error': 'Failed after 5 attempts', 'request_id': 'kachimaxy2@gmial.com'}
+2025-11-13 10:03:49,219 | ERROR | smtp_error
+2025-11-13 10:04:02,074 | ERROR | smtp_error
+2025-11-13 10:04:16,932 | ERROR | smtp_error
+2025-11-13 10:04:35,837 | ERROR | smtp_error
+2025-11-13 10:05:02,716 | ERROR | smtp_error
+2025-11-13 10:05:34,728 | ERROR | email_failed_after_retries
+2025-11-13 10:05:34,729 | ERROR | email_send_failed
+2025-11-13 10:05:34,730 | ERROR | {'status': 'email_failed', 'error': 'Failed after 5 attempts', 'request_id': 'kachimaxy2@gmial.com'}
+2025-11-13 10:05:42,308 | ERROR | {'status': 'consumer_exception', 'error': 'Channel closed by RPC timeout'}
+2025-11-13 10:08:48,284 | ERROR | {'status': 'consumer_exception', 'error': 'Event loop is closed'}

@@ -1,95 +1,111 @@
-2025-11-13 09:14:13,159 | INFO | email_service_app | Service startup — launching consumer background task.
-2025-11-13 09:14:13,159 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
-2025-11-13 09:14:13,160 | INFO | email_service_app | Consumer started successfully.
-2025-11-13 09:14:13,538 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
-2025-11-13 09:14:13,673 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:14:13,674 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:14:35,098 | INFO | email_service_app | Service startup — launching consumer background task.
-2025-11-13 09:14:35,099 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
-2025-11-13 09:14:35,099 | INFO | email_service_app | Consumer started successfully.
-2025-11-13 09:14:59,379 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:04,581 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:09,680 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:14,786 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:19,851 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:25,012 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:26,720 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/ from 127.0.0.1
-2025-11-13 09:15:26,720 | INFO | email_service_app | Root endpoint accessed
-2025-11-13 09:15:29,000 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/health from 127.0.0.1
-2025-11-13 09:15:29,000 | INFO | email_service_app | Health check OK
-2025-11-13 09:15:30,070 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:34,070 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:39,131 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:44,226 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:49,339 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:54,394 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:15:59,477 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:04,576 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:09,663 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:14,732 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:19,818 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:24,886 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:29,970 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:35,035 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:40,103 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:45,163 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:50,520 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:16:55,582 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:00,644 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:05,694 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:10,751 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:15,833 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:16,533 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:20,517 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/health from 127.0.0.1
-2025-11-13 09:17:20,518 | INFO | email_service_app | Health check OK
-2025-11-13 09:17:21,597 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:24,252 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:29,350 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:32,204 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/docs from 127.0.0.1
-2025-11-13 09:17:34,410 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:34,938 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/openapi.json from 127.0.0.1
-2025-11-13 09:17:39,478 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:43,862 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:47,083 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:52,145 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:17:57,246 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:02,306 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:07,391 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:12,462 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:17,663 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:22,797 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:28,135 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:33,193 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:38,255 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:43,403 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:48,488 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:53,558 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:18:58,409 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/ from 127.0.0.1
-2025-11-13 09:18:58,410 | INFO | email_service_app | Root endpoint accessed
-2025-11-13 09:18:58,633 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:01,919 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/ from 127.0.0.1
-2025-11-13 09:19:01,920 | INFO | email_service_app | Root endpoint accessed
-2025-11-13 09:19:03,694 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:08,765 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:13,825 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:18,884 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:23,945 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:26,289 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/send_email from 127.0.0.1
-2025-11-13 09:19:26,564 | INFO | email_service_app | Email send request: to=user@example.com, subject=string, id=string
-2025-11-13 09:19:28,129 | INFO | email_service_app | Email queued successfully: user@example.com | request_id=string
-2025-11-13 09:19:28,998 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:29,753 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/send_email from 127.0.0.1
-2025-11-13 09:19:29,756 | INFO | email_service_app | Email send request: to=user@example.com, subject=string, id=string
-2025-11-13 09:19:31,190 | INFO | email_service_app | Email queued successfully: user@example.com | request_id=string
-2025-11-13 09:19:34,060 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:36,001 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:37,467 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:42,536 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:47,651 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:52,742 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:19:57,862 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:20:02,979 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:20:08,081 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:20:13,180 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:20:18,290 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
-2025-11-13 09:20:23,395 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
+2025-11-13 09:49:09,234 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 09:49:09,235 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 09:49:09,235 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 09:49:17,236 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
+2025-11-13 09:52:01,658 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
+2025-11-13 09:52:06,674 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 09:52:31,028 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 09:52:31,029 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 09:52:31,029 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 09:55:38,375 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
+2025-11-13 09:55:49,537 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 09:55:49,538 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 09:55:49,538 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 09:58:26,933 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
+2025-11-13 09:58:31,946 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 09:59:14,190 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 09:59:14,191 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 09:59:14,191 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:00:07,638 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
+2025-11-13 10:00:13,825 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:00:13,826 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:00:13,826 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:00:13,827 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:00:13,827 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:00:13,827 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:00:36,667 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:00:37,402 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
+2025-11-13 10:00:42,413 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:01:39,144 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:01:39,144 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:01:39,145 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:01:39,145 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:01:39,145 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:01:39,146 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:01:39,189 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/send_email from 127.0.0.1
+2025-11-13 10:01:39,190 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/send_email from 127.0.0.1
+2025-11-13 10:01:39,191 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/all_request_ids from 127.0.0.1
+2025-11-13 10:01:39,191 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/all_request_ids from 127.0.0.1
+2025-11-13 10:01:39,192 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:01:39,193 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:01:39,193 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/tester from 127.0.0.1
+2025-11-13 10:01:39,836 | INFO | email_service_app | Email send request: to=kachimaxy2@gmial.com, subject=work, id=None
+2025-11-13 10:01:39,837 | INFO | email_service_app | Email send request: to=kachimaxy2@gmial.com, subject=work, id=None
+2025-11-13 10:01:41,448 | INFO | email_service_app | Email queued successfully: kachimaxy2@gmial.com | request_id=kachimaxy2@gmial.com
+2025-11-13 10:01:41,586 | INFO | email_service_app | Email queued successfully: kachimaxy2@gmial.com | request_id=kachimaxy2@gmial.com
+2025-11-13 10:02:14,029 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:02:38,314 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/send_email from 127.0.0.1
+2025-11-13 10:02:38,315 | INFO | email_service_app | Email send request: to=kachimaxy2@gmial.com, subject=wrHNTEGFR, id=None
+2025-11-13 10:02:39,933 | INFO | email_service_app | Email queued successfully: kachimaxy2@gmial.com | request_id=kachimaxy2@gmial.com
+2025-11-13 10:02:52,195 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:03:05,490 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/status from 127.0.0.1
+2025-11-13 10:03:05,491 | INFO | email_service_app | Status check for request_id=kachimaxy2@gmial.com
+2025-11-13 10:03:10,064 | INFO | email_service_app | Incoming request: POST http://127.0.0.1:8000/retry_failed from 127.0.0.1
+2025-11-13 10:03:10,065 | INFO | email_service_app | Retry failed emails triggered
+2025-11-13 10:03:38,705 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:03:42,440 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:03:43,442 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:03:44,071 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:03:54,118 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:04:19,664 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/logs from 127.0.0.1
+2025-11-13 10:05:42,303 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:05:42,309 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
+2025-11-13 10:05:47,310 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:10:30,613 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:10:30,614 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:10:30,614 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:10:36,921 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:12:08,864 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:12:08,864 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 10:12:08,865 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 10:12:10,415 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:12:10,415 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:12:10,416 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:12:15,021 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:18:40,603 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:18:40,604 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 10:18:40,604 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 10:18:48,927 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:18:48,928 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:18:48,928 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:18:49,047 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:18:55,034 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:00,138 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:05,224 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:10,337 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:15,418 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:20,554 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:25,633 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:30,685 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:35,733 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:40,783 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:45,850 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:50,918 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:19:55,989 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:01,049 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:06,138 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:11,211 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:16,282 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:20,463 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:20:20,464 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 10:20:20,464 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 10:20:21,743 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:20:21,744 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:20:21,744 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:20:21,755 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:25,003 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:28,397 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/view_statuses from 127.0.0.1
+2025-11-13 10:20:52,176 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/status from 127.0.0.1
+2025-11-13 10:25:23,032 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:25:23,032 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 10:25:23,033 | INFO | email_service_app | Application shutdown complete.

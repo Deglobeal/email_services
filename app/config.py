@@ -15,7 +15,7 @@ class Settings :
     
         # email
     smtp_host: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    smtp_port: int = int(os.getenv("SMTP_PORT", 465))
+    smtp_port: int = int(os.getenv("SMTP_PORT", 587))
     smtp_user: str = os.getenv("SMTP_USER", "")
     smtp_pass: str = os.getenv("SMTP_PASS", "")
     email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail")

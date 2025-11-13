@@ -8,11 +8,19 @@ import json
 from fastapi.responses import HTMLResponse
 import logging
 from logging.handlers import RotatingFileHandler
-
+from fastapi.staticfiles import StaticFiles
 from app.services.queue_publisher import publish_email
 from app.services.queue_consumer import consume
 from app.utils.logger import get_logger
 
+
+if os.name == "nt":
+    import ctypes
+    ctypes.windll.kernel32.SetConsoleOutputCP(65001)  # UTF-8
+
+app = FastAPI(title="Email Service", version="1.0.0")
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static") 
 
 # Logging setup (writes to console + rotating file)
 
@@ -132,6 +140,7 @@ async def retry_failed_endpoint():
 
 # Background Consumer Task
 
+
 consumer_task: asyncio.Task | None = None
 
 async def start_consumer():
@@ -139,16 +148,15 @@ async def start_consumer():
     global consumer_task
     loop = asyncio.get_running_loop()
 
-    def shutdown():
-        if consumer_task:
-            consumer_task.cancel()
-        logger.info("Shutdown signal received — stopping consumer...")
-
-    # Handle signal setup based on OS
+    # Windows doesn't support signal handlers in asyncio
     if platform.system() != "Windows":
+        def shutdown_signal_handler():
+            if consumer_task:
+                consumer_task.cancel()
+                logger.info("Shutdown signal received — stopping consumer...")
         try:
-            loop.add_signal_handler(signal.SIGTERM, shutdown)
-            loop.add_signal_handler(signal.SIGINT, shutdown)
+            loop.add_signal_handler(signal.SIGTERM, shutdown_signal_handler)
+            loop.add_signal_handler(signal.SIGINT, shutdown_signal_handler)
         except NotImplementedError:
             logger.warning("Signal handlers not implemented on this platform.")
     else:
@@ -166,12 +174,27 @@ async def start_consumer():
             logger.error(f"Consumer crashed: {e}. Restarting in 5 seconds...")
             await asyncio.sleep(5)
 
+# ----------------- STOP CONSUMER -----------------
+async def stop_consumer():
+    """Cancel consumer task gracefully"""
+    global consumer_task
+    if consumer_task and not consumer_task.done():
+        consumer_task.cancel()
+        try:
+            await consumer_task
+        except asyncio.CancelledError:
+            logger.info("Consumer task cancelled successfully.")
 
+# ----------------- LIFECYCLE HOOKS -----------------
 @app.on_event("startup")
-async def startup_event():
-    """Start the RabbitMQ consumer on service startup"""
+async def on_startup():
     logger.info("Service startup — launching consumer background task.")
     asyncio.create_task(start_consumer())
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    await stop_consumer()
+    logger.info("Application shutdown complete.")
 
 
 # logs html endpoint
@@ -187,7 +210,7 @@ async def view_logs():
     <html>
     <head>
         <title>Email Service Logs</title>
-        <meta http-equiv="refresh" content="5">
+        <meta http-equiv="refresh" content="900"> <!-- auto-refresh every 15 minutes -->
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; }
             table { border-collapse: collapse; width: 100%; }
@@ -198,10 +221,12 @@ async def view_logs():
             .ERROR { background-color: #f8d7da; }
             .DEBUG { background-color: #d1ecf1; }
             .CRITICAL { background-color: #f5c6cb; }
+            button { margin-bottom: 10px; padding: 6px 12px; }
         </style>
     </head>
     <body>
         <h1>Email Service Logs</h1>
+        <button onclick="window.location.reload()">Refresh Now</button>
         <table>
             <tr>
                 <th>Time</th>
@@ -211,7 +236,7 @@ async def view_logs():
             </tr>
     """
 
-    # Check if log file exists
+    # Render log entries
     if os.path.exists(log_file_path):
         with open(log_file_path, "r") as f:
             for line in f:
@@ -239,56 +264,51 @@ async def view_logs():
     </body>
     </html>
     """
+
     return HTMLResponse(content=html_content)
-    """Render structured JSON logs as a color-coded HTML table"""
-    log_file_path = "logs/structured_logs.json"
-    
+
+@app.get("/tester", response_class=HTMLResponse)
+async def tester():
+    return HTMLResponse(open("app/static/test_api.html").read())
+
+
+
+@app.get("/view_statuses", response_class=HTMLResponse)
+async def view_statuses():
+    """Render all request IDs and their statuses as an HTML table"""
     html_content = """
     <html>
     <head>
-        <title>Email Service Logs</title>
-        <meta http-equiv="refresh" content="5">
+        <title>Email Request Statuses</title>
+        <meta http-equiv="refresh" content="900"> <!-- Refresh every 15 minutes -->
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; }
             table { border-collapse: collapse; width: 100%; }
             th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
             th { background-color: #f2f2f2; }
-            .INFO { background-color: #d4edda; }      /* green */
-            .WARNING { background-color: #fff3cd; }   /* yellow */
-            .ERROR { background-color: #f8d7da; }     /* red */
-            .DEBUG { background-color: #d1ecf1; }     /* cyan */
-            .CRITICAL { background-color: #f5c6cb; }  /* dark red */
+            tr:nth-child(even) { background-color: #f9f9f9; }
         </style>
     </head>
     <body>
-        <h1>Email Service Logs</h1>
+        <h1>Email Request Statuses</h1>
         <table>
             <tr>
-                <th>Time</th>
-                <th>Level</th>
                 <th>Request ID</th>
-                <th>Message</th>
+                <th>Status</th>
             </tr>
     """
 
-    try:
-        with open(log_file_path, "r") as f:
-            for line in f:
-                try:
-                    log_entry = json.loads(line)
-                    level = log_entry.get("levelname", "")
-                    html_content += f"""
-                    <tr class="{level}">
-                        <td>{log_entry.get('asctime', '')}</td>
-                        <td>{level}</td>
-                        <td>{log_entry.get('request_id', '')}</td>
-                        <td>{log_entry.get('message', '')}</td>
-                    </tr>
-                    """
-                except json.JSONDecodeError:
-                    continue
-    except FileNotFoundError:
-        html_content += "<tr><td colspan='4'>No logs found.</td></tr>"
+    # Populate table rows
+    for request_id, status in email_status_store.items():
+        html_content += f"""
+            <tr>
+                <td>{request_id}</td>
+                <td>{status}</td>
+            </tr>
+        """
+
+    if not email_status_store:
+        html_content += "<tr><td colspan='2'>No requests found.</td></tr>"
 
     html_content += """
         </table>
@@ -297,28 +317,4 @@ async def view_logs():
     """
     return HTMLResponse(content=html_content)
 
-    """Render structured logs as a simple HTML page"""
-    log_file_path = "logs/structured_logs.json"
-    logs_html = "<h1>Email Service Logs</h1><table border='1' style='border-collapse: collapse;'>"
-    logs_html += "<tr><th>Time</th><th>Level</th><th>Request ID</th><th>Message</th></tr>"
 
-    try:
-        with open(log_file_path, "r") as f:
-            for line in f:
-                try:
-                    log_entry = json.loads(line)
-                    logs_html += (
-                        f"<tr>"
-                        f"<td>{log_entry.get('asctime', '')}</td>"
-                        f"<td>{log_entry.get('levelname', '')}</td>"
-                        f"<td>{log_entry.get('request_id', '')}</td>"
-                        f"<td>{log_entry.get('message', '')}</td>"
-                        f"</tr>"
-                    )
-                except json.JSONDecodeError:
-                    continue
-    except FileNotFoundError:
-        logs_html += "<tr><td colspan='4'>No logs found.</td></tr>"
-
-    logs_html += "</table>"
-    return logs_html
