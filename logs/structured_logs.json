@@ -144,3 +144,6 @@
 {"asctime": "2025-11-13 11:47:52,870", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
 {"asctime": "2025-11-13 11:47:55,408", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
 {"asctime": "2025-11-13 11:47:58,607", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:48:01,413", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:51:35,020", "levelname": "INFO", "name": "email_sender", "message": "email_sent", "to_email": "ugwugerard20@gmail.com", "subject": "SMTP Test", "attempt": 1, "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 11:52:57,353", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}

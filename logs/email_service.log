@@ -223,3 +223,11 @@
 2025-11-13 11:47:58,608 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
 2025-11-13 11:47:58,608 | INFO | email_service_app | Consumer task cancelled successfully.
 2025-11-13 11:47:58,608 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 11:47:59,870 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 11:47:59,871 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 11:47:59,872 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 11:49:38,611 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/invitations/ from 127.0.0.1
+2025-11-13 11:51:28,430 | INFO | email_service_app | Incoming request: GET http://127.0.0.1:8000/test_smtp from 127.0.0.1
+2025-11-13 11:52:57,354 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 11:52:57,354 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 11:52:57,355 | INFO | email_service_app | Application shutdown complete.
