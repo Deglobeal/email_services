@@ -1,89 +1,49 @@
-# test_email_service_endpoints.py
-
 import asyncio
-import json
-import requests
-from app.config import settings
-from app.services.email_sender import send_email_async
 import aio_pika
-import time
+import os
+from dotenv import load_dotenv
 
-BASE_URL = "http://127.0.0.1:8000"
+load_dotenv()
 
-# -----------------------------
-# Async test for SMTP email directly
-# -----------------------------
-async def test_send_email():
-    to_email = "kachimaxy2@gmail.com"  # Replace with your real test email
-    subject = "Stage 4 Email Service SMTP Test"
-    body = "Hello! This is a direct SMTP test email."
+RABBIT_URL = os.getenv("QUEUE_HOST")
+EMAIL_QUEUE = os.getenv("EMAIL_QUEUE_NAME", "email.queue")
+DLQ = os.getenv("DEAD_LETTER_QUEUE_NAME", "dead_letter.queue")
+EXCHANGE = os.getenv("EXCHANGE_NAME", "notifications.direct")
 
-    success, error = await send_email_async(to_email, subject, body)
-    if success:
-        print("✅ SMTP Email sent successfully!")
-    else:
-        print(f"❌ Failed to send SMTP email: {error}")
+async def reset_queues():
+    print(f"🔄 Connecting to {RABBIT_URL}")
+    connection = await aio_pika.connect_robust(RABBIT_URL)
+    async with connection:
+        channel = await connection.channel()
 
+        # Try deleting old queues/exchanges
+        print("🗑️ Deleting existing queues (if they exist)...")
+        for q in [EMAIL_QUEUE, DLQ]:
+            try:
+                await channel.queue_delete(q)
+                print(f"✅ Deleted queue: {q}")
+            except Exception as e:
+                print(f"⚠️ Could not delete {q}: {e}")
 
-# -----------------------------
-# Test RabbitMQ connection
-# -----------------------------
-async def test_rabbitmq():
-    try:
-        connection = await aio_pika.connect_robust(settings.rabbitmq_url)
-        async with connection:
-            print("✅ Connected to RabbitMQ")
-    except Exception as e:
-        print(f"❌ RabbitMQ connection failed: {e}")
+        try:
+            await channel.exchange_delete(EXCHANGE)
+            print(f"✅ Deleted exchange: {EXCHANGE}")
+        except Exception as e:
+            print(f"⚠️ Could not delete exchange: {e}")
 
+        # Recreate fresh
+        print("🔧 Creating new exchange and queues...")
+        exchange = await channel.declare_exchange(EXCHANGE, aio_pika.ExchangeType.DIRECT, durable=True)
+        dlq = await channel.declare_queue(DLQ, durable=True)
+        await dlq.bind(exchange, routing_key="failed")
 
-# -----------------------------
-# Test FastAPI endpoints
-# -----------------------------
-def test_api_endpoints():
-    # Health check
-    try:
-        resp = requests.get(f"{BASE_URL}/health")
-        print("Health Check:", resp.json())
-    except Exception as e:
-        print("❌ Health check failed:", e)
+        email_queue = await channel.declare_queue(
+            EMAIL_QUEUE,
+            durable=True,
+            arguments={"x-dead-letter-exchange": "dead.letter.exchange"}
+        )
+        await email_queue.bind(exchange, routing_key=EMAIL_QUEUE)
 
-    # Send email endpoint
-    payload = {
-        "to": "kachimaxy2@gmail.com",
-        "subject": "Stage 4 /send_email Test",
-        "body": "Hello from /send_email endpoint test!",
-        "request_id": "test123"
-    }
+        print(f"✅ Recreated {EMAIL_QUEUE} and {DLQ} successfully.")
 
-    try:
-        resp = requests.post(f"{BASE_URL}/send_email/", json=payload)
-        print("/send_email response:", resp.json())
-    except Exception as e:
-        print("❌ /send_email failed:", e)
-
-    # Status endpoint
-    payload_status = {"request_id": "test123"}
-    try:
-        resp = requests.post(f"{BASE_URL}/status/", json=payload_status)
-        print("/status response:", resp.json())
-    except Exception as e:
-        print("❌ /status failed:", e)
-
-
-# -----------------------------
-# Run all tests
-# -----------------------------
-if __name__ == "__main__":
-    print("=== Testing SMTP Email ===")
-    asyncio.run(test_send_email())
-
-    print("\n=== Testing RabbitMQ Connection ===")
-    asyncio.run(test_rabbitmq())
-
-    # Wait a bit for the consumer to process queued messages
-    print("\n[Waiting 5 seconds for queue processing...]")
-    time.sleep(5)
-
-    print("\n=== Testing FastAPI Endpoints ===")
-    test_api_endpoints()
+asyncio.run(reset_queues())

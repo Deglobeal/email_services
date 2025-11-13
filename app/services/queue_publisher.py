@@ -6,28 +6,88 @@ from app.utils.logger import get_logger
 
 logger = get_logger("queue_publisher")
 
-async def publish_email(to: str, subject: str, body: str, request_id: str | None = None, priority: int = 1):
+
+async def publish_email(
+    to: str,
+    subject: str,
+    body: str,
+    request_id: str | None = None,
+    priority: int = 1,
+):
     """
-    Publish email to RabbitMQ queue
+    Publish email data to RabbitMQ queue on Railway.
+    Ensures connection reusability and matches existing queue configuration.
     """
     try:
-        connection = await aio_pika.connect_robust(settings.rabbitmq_url)
+        rabbitmq_url = settings.queue_host or settings.queue_host
+        logger.info(f"🔍 Connecting to RabbitMQ at: {rabbitmq_url}")
+
+        # ✅ Connect to RabbitMQ
+        connection = await aio_pika.connect_robust(rabbitmq_url)
         async with connection:
             channel = await connection.channel()
-            exchange = await channel.declare_exchange(settings.exchange_name, aio_pika.ExchangeType.DIRECT) # type: ignore
-            message_body = json.dumps({
-                "to": to,
-                "subject": subject,
-                "body": body,
-                "request_id": request_id,
-                "priority": priority
-            }).encode()
 
-            await exchange.publish(
-                aio_pika.Message(body=message_body, delivery_mode=aio_pika.DeliveryMode.PERSISTENT),
-                routing_key=settings.email_queue_name # type: ignore
+            # ✅ Match existing queue declaration on Railway
+            await channel.declare_queue(
+                settings.email_queue_name,
+                durable=True,
+                arguments={
+                    "x-dead-letter-exchange": "dead.letter.exchange"
+                },
             )
-            logger.info({"status": "message_published", "to": to, "subject": subject, "request_id": request_id})
+
+            # ✅ Prepare message payload
+            message_body = json.dumps(
+                {
+                    "to": to,
+                    "subject": subject,
+                    "body": body,
+                    "request_id": request_id,
+                    "priority": priority,
+                }
+            ).encode()
+
+            # ✅ Publish message directly to queue
+            await channel.default_exchange.publish(
+                aio_pika.Message(
+                    body=message_body,
+                    delivery_mode=aio_pika.DeliveryMode.PERSISTENT,
+                ),
+                routing_key=settings.email_queue_name,
+            )
+
+            logger.info(
+                {
+                    "status": "message_published",
+                    "queue": settings.email_queue_name,
+                    "to": to,
+                    "subject": subject,
+                    "request_id": request_id,
+                }
+            )
+            print(f"✅ Message published successfully to {settings.email_queue_name}")
+
     except Exception as e:
-        logger.error({"status": "publish_failed", "error": str(e)})
+        error_msg = str(e)
+        logger.error(
+            {
+                "status": "publish_failed",
+                "queue": settings.email_queue_name,
+                "error": error_msg,
+            }
+        )
+        print(f"❌ Failed to publish message: {error_msg}")
         raise
+
+
+# ✅ For direct testing
+if __name__ == "__main__":
+    async def test_publish():
+        await publish_email(
+            to="test@example.com",
+            subject="RabbitMQ Test",
+            body="This is a test message from local script.",
+            request_id="local-test-001",
+        )
+
+    asyncio.run(test_publish())

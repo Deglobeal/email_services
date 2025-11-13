@@ -3,17 +3,23 @@ import os
 
 load_dotenv()
 
-# Make sure .env is loaded correctly
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
+class Settings:
+    # RabbitMQ
+    queue_host: str = os.getenv(
+        "QUEUE_HOST",
+        "amqp://iE3xhRjkn8bQHL1Z:ZLuWC7X7b5TdmseCa43AN4eB2IWy3dPD@yamanote.proxy.rlwy.net:15031/"
+    )
 
-class Settings :
-        # rabbitmq
-    rabbitmq_url: str = os.getenv("RABBITMQ_URL", "amqp://iE3xhRjkn8bQHL1Z:ZLuWC7X7b5TdmseCa43AN4eB2IWy3dPD@yamanote.proxy.rlwy.net:15031/")
-    database_url: str = os.getenv("DATABASE_URL", "postgresql://postgres:nlRajiKVwbaSkhnMDToqMTOiiKBMwkYP@postgres.railway.internal:5432/railway")
-    
-        # email
+    # Postgres
+    database_url: str = os.getenv(
+        "DATABASE_URL",
+        "postgresql://postgres:nlRajiKVwbaSkhnMDToqMTOiiKBMwkYP@postgres.railway.internal:5432/railway"
+    )
+
+    # Email / SMTP
     smtp_host: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port: int = int(os.getenv("SMTP_PORT", 465))
     smtp_user: str = os.getenv("SMTP_USER", "")
@@ -21,12 +27,13 @@ class Settings :
     email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail.com")
     use_real_smtp: bool = os.getenv("USE_REAL_SMTP", "False").lower() in ("true", "1")
     use_ssl: bool = os.getenv("USE_SSL", "True").lower() in ("true", "1")
-    #  RabbitMQ queues
+
+    # RabbitMQ queues
     email_queue_name: str = os.getenv("EMAIL_QUEUE_NAME", "email.queue")
-    dead_letter_queue_name: str = os.getenv("DEAD_LETTER_QUEUE_NAME", "failed.queue")
+    dead_letter_queue_name: str = os.getenv("DEAD_LETTER_QUEUE_NAME", "dead_letter.queue")
     exchange_name: str = os.getenv("EXCHANGE_NAME", "notifications.direct")
 
-    
+    # Service runtime
     max_retry_attempts: int = int(os.getenv("MAX_RETRY_ATTEMPTS", 5))
     redis_url: str = os.getenv("REDIS_URL", "")
 
