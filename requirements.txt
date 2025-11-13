@@ -18,3 +18,4 @@ aio-pika
 python-dotenv
 python-json-logger
 pydantic
+colorama==0.4.6

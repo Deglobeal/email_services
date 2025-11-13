@@ -109,3 +109,9 @@
 2025-11-13 10:25:23,032 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
 2025-11-13 10:25:23,032 | INFO | email_service_app | Consumer task cancelled successfully.
 2025-11-13 10:25:23,033 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 10:33:45,933 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 10:33:45,933 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 10:33:45,934 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 10:34:57,655 | INFO | email_service_app | Consumer task cancelled — shutting down gracefully.
+2025-11-13 10:34:57,655 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 10:34:57,656 | INFO | email_service_app | Application shutdown complete.

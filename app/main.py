@@ -84,15 +84,42 @@ async def log_requests(request: Request, call_next):
 
 # Routes
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    logger.info("Root endpoint accessed")
-    return {
-        "service": "Email Service",
-        "status": "running",
-        "docs": "/docs",
-        "endpoints": ["/health", "/send_email", "/status", "/retry_failed"],
-    }
+    """Home page showing service info and all endpoints with clickable links"""
+    base_url = "https://emailservices-production.up.railway.app"
+
+    html_content = f"""
+    <html>
+    <head>
+        <title>Email Service Home</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 20px; }}
+            h1 {{ color: #333; }}
+            ul {{ line-height: 1.8; }}
+            a {{ text-decoration: none; color: #007BFF; }}
+            a:hover {{ text-decoration: underline; }}
+        </style>
+    </head>
+    <body>
+        <h1>Email Service</h1>
+        <p>Status: <strong>Running ✅</strong></p>
+        <p>Version: 1.0.0</p>
+        <h2>Available Endpoints</h2>
+        <ul>
+            <li><a href="{base_url}/health" target="_blank">/health</a> - Service health check</li>
+            <li><a href="{base_url}/send_email" target="_blank">/send_email</a> - Send an email (POST)</li>
+            <li><a href="{base_url}/status" target="_blank">/status</a> - Check email status (POST)</li>
+            <li><a href="{base_url}/retry_failed" target="_blank">/retry_failed</a> - Retry failed emails (POST)</li>
+            <li><a href="{base_url}/logs" target="_blank">/logs</a> - View structured logs (HTML)</li>
+            <li><a href="{base_url}/tester" target="_blank">/tester</a> - Test API page</li>
+            <li><a href="{base_url}/view_statuses" target="_blank">/view_statuses</a> - View all email statuses (HTML)</li>
+        </ul>
+        <p>API Docs: <a href="{base_url}/docs" target="_blank">/docs</a></p>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
 
 
 @app.get("/health")

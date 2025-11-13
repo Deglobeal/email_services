@@ -91,3 +91,5 @@
 {"asctime": "2025-11-13 10:20:20,463", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
 {"asctime": "2025-11-13 10:20:23,292", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
 {"asctime": "2025-11-13 10:25:23,031", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 10:33:51,314", "levelname": "INFO", "name": "queue_consumer", "message": "", "status": "started_consuming", "queue": "email.queue", "service": "email_service_app", "request_id": null}
+{"asctime": "2025-11-13 10:34:57,654", "levelname": "INFO", "name": "queue_consumer", "message": "Consumer cancelled gracefully", "service": "email_service_app", "request_id": null}
