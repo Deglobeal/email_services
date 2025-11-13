@@ -13,7 +13,7 @@ circuit = CircuitBreaker(failure_threshold=3, recovery_time=20)  # 3 failures op
 
 async def send_email_async(to_email: str, subject: str, body: str, html: bool = False):
     """
-    Sends an email asynchronously via Gmail SMTP (STARTTLS recommended on port 587)
+    Sends an email asynchronously via Gmail SMTP over SSL (port 465)
     Implements retries with exponential backoff and circuit breaker protection.
     """
     if not circuit.allow_request():
@@ -35,11 +35,11 @@ async def send_email_async(to_email: str, subject: str, body: str, html: bool = 
 
     for attempt in range(1, settings.max_retry_attempts + 1):
         try:
-            # Gmail STARTTLS configuration
+            # Gmail SSL (port 465) configuration
             smtp = SMTP(
                 hostname=settings.smtp_host,
-                port=settings.smtp_port,  # Should be 587 for STARTTLS
-                start_tls=True,
+                port=settings.smtp_port,  # 465 for SSL
+                use_tls=True,             # Enable SSL
                 timeout=10
             )
             await smtp.connect()

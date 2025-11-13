@@ -15,10 +15,10 @@ class Settings :
     
         # email
     smtp_host: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    smtp_port: int = int(os.getenv("SMTP_PORT", 587))
+    smtp_port: int = int(os.getenv("SMTP_PORT", 465))
     smtp_user: str = os.getenv("SMTP_USER", "")
     smtp_pass: str = os.getenv("SMTP_PASS", "")
-    email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail")
+    email_from: str = os.getenv("EMAIL_FROM", "kachimaxy2@gmail.com")
     use_real_smtp: bool = os.getenv("USE_REAL_SMTP", "False").lower() in ("true", "1")
 
     #  RabbitMQ queues
