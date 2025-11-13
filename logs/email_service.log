@@ -1,0 +1,4 @@
+2025-11-13 08:32:48,822 | INFO | email_service_app | Service startup — launching consumer background task.
+2025-11-13 08:32:48,834 | WARNING | email_service_app | Windows detected — skipping signal handler setup.
+2025-11-13 08:32:48,834 | INFO | email_service_app | Consumer started successfully.
+2025-11-13 08:33:41,925 | ERROR | email_service_app | Consumer crashed: Channel closed by RPC timeout. Restarting in 5 seconds...
