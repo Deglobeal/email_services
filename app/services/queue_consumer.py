@@ -26,12 +26,10 @@ async def consume() -> None:
             queue = await channel.declare_queue(
                 settings.email_queue_name,
                 durable=True,
-                arguments={"x-dead-letter-exchange": "dead.letter.exchange"},
+                arguments={"x-dead-letter-exchange": settings.dead_letter_queue_name},
             )
-
-            dead_letter_queue = await channel.declare_queue(
-                settings.dead_letter_queue_name, durable=True
-            )
+# Ensure DLQ exists
+            await channel.declare_queue(settings.dead_letter_queue_name, durable=True)
 
             logger.info({"status": "started_consuming", "queue": queue.name})
 

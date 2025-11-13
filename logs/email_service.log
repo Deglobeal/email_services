@@ -1794,3 +1794,15 @@
 2025-11-13 15:17:03,069 | ERROR | email_service_app | Consumer crashed: PRECONDITION_FAILED - inequivalent arg 'x-dead-letter-exchange' for queue 'email.queue' in vhost '/': received 'dead_letter.queue' but current is 'dead.letter.exchange'. Restarting in 5 seconds...
 2025-11-13 15:17:10,198 | ERROR | email_service_app | Consumer crashed: PRECONDITION_FAILED - inequivalent arg 'x-dead-letter-exchange' for queue 'email.queue' in vhost '/': received 'dead_letter.queue' but current is 'dead.letter.exchange'. Restarting in 5 seconds...
 2025-11-13 15:17:11,659 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 15:17:12,963 | INFO | email_service_app | Service startup — launching consumer task.
+2025-11-13 15:58:25,897 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 15:58:25,898 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 15:58:32,827 | INFO | email_service_app | Service startup — launching consumer task.
+2025-11-13 16:02:41,752 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 16:02:41,752 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 16:02:43,684 | INFO | email_service_app | Service startup — launching consumer task.
+2025-11-13 16:05:16,154 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 16:05:16,156 | INFO | email_service_app | Application shutdown complete.
+2025-11-13 16:05:17,742 | INFO | email_service_app | Service startup — launching consumer task.
+2025-11-13 16:05:47,697 | INFO | email_service_app | Consumer task cancelled successfully.
+2025-11-13 16:05:47,697 | INFO | email_service_app | Application shutdown complete.

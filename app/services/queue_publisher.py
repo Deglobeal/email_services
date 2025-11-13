@@ -14,10 +14,6 @@ async def publish_email(
     request_id: str | None = None,
     priority: int = 1,
 ):
-    """
-    Publish email data to RabbitMQ queue on Railway.
-    - Always uses the existing queue's dead-letter exchange if present.
-    """
     try:
         rabbitmq_url = settings.queue_host
         logger.info(f"🔍 Connecting to RabbitMQ at: {rabbitmq_url}")
@@ -26,11 +22,14 @@ async def publish_email(
         async with connection:
             channel = await connection.channel()
 
-            # Declare queue idempotently (will not fail if exists)
+            # Ensure DLQ exists first
+            await channel.declare_queue(settings.dead_letter_queue_name, durable=True)
+
+            # Declare main queue with DLX
             await channel.declare_queue(
                 settings.email_queue_name,
                 durable=True,
-                arguments={"x-dead-letter-exchange": "dead.letter.exchange"},
+                arguments={"x-dead-letter-exchange": settings.dead_letter_queue_name},
             )
 
             message_body = json.dumps(
